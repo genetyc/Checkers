@@ -15,8 +15,4 @@ public class Moves {
     public Moves(MoveType type) {
         this(type, null);
     }
-
-    public static MoveType currentMove(Tile[][] field, int x, int y) {
-        return MoveType.NONE;
-    }
 }

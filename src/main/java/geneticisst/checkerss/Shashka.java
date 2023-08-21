@@ -2,6 +2,7 @@ package geneticisst.checkerss;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 
 import static geneticisst.checkerss.GameSettings.tileSize;
@@ -71,7 +72,12 @@ public class Shashka extends StackPane {
     }
 
     public void promote() {
-        if (!isDamka) isDamka = true;
-        System.out.println("Promotion!");
+        if (!isDamka) {
+            isDamka = true;
+            Circle crown = new Circle(mouseX+50, mouseY+50, tileSize * 0.12);
+            crown.setFill(Color.GOLD);
+            getChildren().add(crown);
+            System.out.println("Promotion!");
+        }
     }
 }
