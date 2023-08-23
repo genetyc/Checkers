@@ -19,8 +19,9 @@ public class Game extends Application {
     Group shashki = new Group();
     Tile[][] field = new Tile[8][8];
     boolean lightsTurn = true;
-    int lightShashkas = 12;
-    int darkShashkas = 12;
+    static int lightShashkas = 12;
+    static int darkShashkas = 12;
+    static boolean game = true;
 
     private Parent board() {
         Pane pane = new Pane();
@@ -67,62 +68,15 @@ public class Game extends Application {
                     || shashka.isLight != lightsTurn || xDiff != yDiff) {
                 shashka.cancel();
             } else {
-                switch (xDiff) {
-                    case 1 -> {
-                        if (shashka.sType.way != 0 && shashka.sType.way == newY - oldY) {
-                            field[oldX][oldY].setShashka(null);
-                            shashka.move(newX, newY);
-                            if ((newY == 0 && shashka.isLight) || (newY == 7 && !shashka.isLight)) {
-                                if (!shashka.isDamka) {
-                                    shashka.promote();
-                                }
-                            }
-                            field[newX][newY].setShashka(shashka);
-                            lightsTurn = !lightsTurn;
-                        } else {
-                            shashka.cancel();
-                        }
-                    }
-                    case 2 -> {
-                        int eatenX = (newX + oldX) / 2;
-                        int eatenY = (newY + oldY) / 2;
-                        Shashka eatenShashka = field[eatenX][eatenY].getShashka();
-                        if (eatenShashka != null && eatenShashka.isLight != shashka.isLight) {
-                            field[oldX][oldY].setShashka(null);
-                            field[eatenX][eatenY].setShashka(null);
-                            shashki.getChildren().remove(eatenShashka);
-                            shashka.move(newX, newY);
-                            if ((newY == 0 && shashka.isLight) || (newY == 7 && !shashka.isLight)) {
-                                if (!shashka.isDamka) {
-                                    shashka.promote();
-                                }
-                            }
-                            field[newX][newY].setShashka(shashka);
-                            lightsTurn = !lightsTurn;
-                        } else {
-                            if (!shashka.isDamka) shashka.cancel(); else {
-                                field[oldX][oldY].setShashka(null);
-                                shashka.move(newX, newY);
-                                field[newX][newY].setShashka(shashka);
-                                lightsTurn = !lightsTurn;
-                            }
-                        }
-
-                    }
-                    default -> {
-                        if (!shashka.isDamka) shashka.cancel();
-                        else {
-                            field[oldX][oldY].setShashka(null);
-                            shashka.move(newX, newY);
-                            field[newX][newY].setShashka(shashka);
-                            lightsTurn = !lightsTurn;
-                        }
-                    }
-                }
+                lightsTurn = PossibleMoves.possibleMoves(field, shashka, oldX, oldY, newX, newY, xDiff, lightsTurn, shashki);
             }
         });
-
         return shashka;
+    }
+
+    static void gameOver() {
+        System.out.println("Game over");
+        game = false;
     }
 
     @Override

@@ -74,6 +74,7 @@ public class Shashka extends StackPane {
     public void promote() {
         if (!isDamka) {
             isDamka = true;
+            this.sType = isLight ? SType.DAMKLIGHT : SType.DAMKDARK;
             Circle crown = new Circle(mouseX+50, mouseY+50, tileSize * 0.12);
             crown.setFill(Color.GOLD);
             getChildren().add(crown);
