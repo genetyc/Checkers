@@ -2,6 +2,8 @@ package geneticisst.checkerss;
 
 import javafx.scene.Group;
 
+import static geneticisst.checkerss.GameSettings.convert;
+
 public class PossibleMoves {
     public static boolean possibleMoves(Tile[][] field, Shashka shashka, int oldX, int oldY, int newX, int newY, int xDiff, boolean lightsTurn, Group shashki) {
         switch (xDiff) {
@@ -61,8 +63,9 @@ public class PossibleMoves {
                     int yMove = oldY + yDirection;
                     boolean hasKilled = false;
                     boolean validMove = true;
+                    Shashka eatenShashka = null;
                     while (xMove != newX && yMove != newY) {
-                        Shashka eatenShashka = field[xMove][yMove].getShashka();
+                        eatenShashka = field[xMove][yMove].getShashka();
                         if (eatenShashka != null) {
                             if (eatenShashka.isLight == shashka.isLight || hasKilled
                                     || field[xMove+xDirection][yMove+yDirection].hasShashka()) {
@@ -70,8 +73,6 @@ public class PossibleMoves {
                                 break;
                             }
                             else {
-                                field[xMove][yMove].setShashka(null);
-                                shashki.getChildren().remove(eatenShashka);
                                 hasKilled = true;
                                 if (eatenShashka.isLight) Game.lightShashkas--;
                                 else Game.darkShashkas--;
@@ -85,6 +86,10 @@ public class PossibleMoves {
                         field[oldX][oldY].setShashka(null);
                         shashka.move(newX, newY);
                         field[newX][newY].setShashka(shashka);
+                        if (eatenShashka != null) {
+                            field[convert(eatenShashka.oldX)][convert(eatenShashka.oldY)].setShashka(null);
+                            shashki.getChildren().remove(eatenShashka);
+                        }
                         lightsTurn = !lightsTurn;
                     } else shashka.cancel();
                 }

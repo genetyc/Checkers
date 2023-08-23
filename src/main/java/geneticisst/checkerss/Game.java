@@ -54,6 +54,11 @@ public class Game extends Application {
 
     private Shashka makeShashka(Shashka.SType sType, int x, int y) {
         Shashka shashka = new Shashka(sType, x, y);
+        shashka.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.SECONDARY) {
+                System.out.println(PossibleJumps.canCapture(field, shashka, convert(shashka.oldX), convert(shashka.oldY)));
+            }
+        });
         shashka.setOnMouseReleased(e -> {
             double mouseX = e.getSceneX();
             double mouseY = e.getSceneY();
