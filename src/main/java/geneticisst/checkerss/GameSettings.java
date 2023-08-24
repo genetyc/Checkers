@@ -7,6 +7,5 @@ public class GameSettings {
 
     public static int convert(double coord) {
         return (int) coord / tileSize;
-        //return (int) (coord + tileSize / 2) / tileSize;   //я не знаю, что это, но это было в видосе и на гитхабе
     }
 }

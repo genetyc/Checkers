@@ -74,20 +74,19 @@ public class PossibleMoves {
                     boolean validMove = true;
                     Shashka eatenShashka = null;
                     while (xMove != newX && yMove != newY) {
-                        eatenShashka = field[xMove][yMove].getShashka();
-                        if (eatenShashka != null) {
-                            if (eatenShashka.isLight == shashka.isLight || hasKilled
-                                    || field[xMove+xDirection][yMove+yDirection].hasShashka() || !killers.contains(shashka)) {
+                        Shashka possibleShashka = field[xMove][yMove].getShashka();
+                        if (possibleShashka != null) {
+                            if (possibleShashka.isLight == shashka.isLight || hasKilled
+                                    || field[xMove+xDirection][yMove+yDirection].hasShashka()
+                                    || !killers.contains(shashka)) {
                                 validMove = false;
                                 break;
                             }
                             else {
+                                eatenShashka = field[xMove][yMove].getShashka();
                                 hasKilled = true;
-                                if (eatenShashka.isLight) Game.lightShashkas--;
-                                else Game.darkShashkas--;
-                                if (Game.lightShashkas == 0 || Game.darkShashkas == 0) Game.gameOver();
                             }
-                        }   //тут возможно есть баги
+                        }
                         xMove+=xDirection;
                         yMove+=yDirection;
                     }
@@ -98,6 +97,9 @@ public class PossibleMoves {
                         if (eatenShashka != null) {
                             field[convert(eatenShashka.oldX)][convert(eatenShashka.oldY)].setShashka(null);
                             shashki.getChildren().remove(eatenShashka);
+                            if (eatenShashka.isLight) Game.lightShashkas--;
+                            else Game.darkShashkas--;
+                            if (Game.lightShashkas == 0 || Game.darkShashkas == 0) Game.gameOver();
                         }
                         if (!canCapture(field, shashka, convert(shashka.oldX), convert(shashka.oldY))) {
                             lightsTurn = !lightsTurn;
@@ -110,7 +112,7 @@ public class PossibleMoves {
                 }
             }
         }
-        return lightsTurn;
+        return lightsTurn;  //add some sounds and killing effects
     }
 
     public static boolean canMove(Tile[][] field, Shashka shashka, int x, int y) {

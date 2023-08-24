@@ -1,17 +1,6 @@
 package geneticisst.checkerss;
 
 public class PossibleJumps {
-    Shashka shashka;
-    int oldX, oldY, newX, newY;
-
-    public PossibleJumps(Shashka shashka, int oldX, int oldY, int newX, int newY) {
-        this.shashka = shashka;
-        this.oldX = oldX;
-        this.oldY = oldY;
-        this.newX = newX;
-        this.newY = newY;
-    }
-
     public static boolean canCapture(Tile[][] field, Shashka shashka, int x, int y) {
         int[][] directions = {{1, -1}, {1, 1}, {-1, -1}, {-1, 1}};
 
@@ -42,7 +31,7 @@ public class PossibleJumps {
                         } else {
                             try {
                                 return !field[xMove + direction[0]][yMove + direction[1]].hasShashka();
-                            } catch (ArrayIndexOutOfBoundsException oob) {}
+                            } catch (ArrayIndexOutOfBoundsException ignored) {}
                         }
                     }
                     xMove+=direction[0];

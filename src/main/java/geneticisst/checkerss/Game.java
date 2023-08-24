@@ -62,7 +62,7 @@ public class Game extends Application {
             if (e.getButton() == MouseButton.SECONDARY) {
                 boolean canKill = PossibleJumps.canCapture(field, shashka, convert(shashka.oldX), convert(shashka.oldY));
                 boolean canMove = PossibleMoves.canMove(field, shashka, convert(shashka.oldX), convert(shashka.oldY));
-                System.out.printf("Can move -> %s, can kill -> %s%n", canMove, canKill);
+                System.out.printf("Can%s move, can%s kill", canMove ? "" : "'t", canKill ? "" : "'t");
             }
         });
         shashka.setOnMouseReleased(e -> {
@@ -100,8 +100,9 @@ public class Game extends Application {
     }
 
     static void gameOver() {
-        System.out.println("Game over");
+        if (game) System.out.println("Game over");
         game = false;
+        //add a game-ending effect, something like evaporating all left pieces away
     }
 
     @Override
