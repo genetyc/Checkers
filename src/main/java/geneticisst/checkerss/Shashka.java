@@ -5,17 +5,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 
+import static geneticisst.checkerss.GameSettings.convert;
 import static geneticisst.checkerss.GameSettings.tileSize;
+import static geneticisst.checkerss.PossibleJumps.canCapture;
+import static geneticisst.checkerss.Game.*;
 
 public class Shashka extends StackPane {
     public enum SType {
-        DARK(1), LIGHT(-1), DAMKDARK, DAMKLIGHT;
+        DARK(1), LIGHT(-1);
 
         public final int way;
-
-        SType() {
-            this.way = 0;
-        }
 
         SType(int way) {
             this.way = way;
@@ -26,7 +25,6 @@ public class Shashka extends StackPane {
     public double mouseX, mouseY, oldX, oldY;
     public boolean isDamka = false;
     public boolean isLight;
-
 
     public Shashka(SType sType, int x, int y) {
         this.sType = sType;
@@ -74,11 +72,15 @@ public class Shashka extends StackPane {
     public void promote() {
         if (!isDamka) {
             isDamka = true;
-            this.sType = isLight ? SType.DAMKLIGHT : SType.DAMKDARK;
             Circle crown = new Circle(mouseX+50, mouseY+50, tileSize * 0.12);
             crown.setFill(Color.GOLD);
             getChildren().add(crown);
             System.out.println("Promotion!");
+            if (canCapture(field, this, convert(oldX), convert(oldY))) {
+                killers.clear();
+                walkers.clear();
+                killers.add(this);
+            }
         }
     }
 }

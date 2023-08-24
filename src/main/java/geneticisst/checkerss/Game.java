@@ -2,26 +2,30 @@ package geneticisst.checkerss;
 
 import javafx.application.Application;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import kotlin.Pair;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.LinkedList;
 
 import static geneticisst.checkerss.GameSettings.*;
+import static geneticisst.checkerss.PossibleJumps.canCapture;
+import static geneticisst.checkerss.PossibleMoves.canMove;
 
 public class Game extends Application {
     Group tiles = new Group();
     Group shashki = new Group();
-    Tile[][] field = new Tile[8][8];
+    static Tile[][] field = new Tile[8][8];
     boolean lightsTurn = true;
     static int lightShashkas = 12;
     static int darkShashkas = 12;
     static boolean game = true;
+    static LinkedList<Shashka> killers = new LinkedList<>();
+    static LinkedList<Shashka> walkers = new LinkedList<>();
 
     private Parent board() {
         Pane pane = new Pane();
@@ -56,7 +60,9 @@ public class Game extends Application {
         Shashka shashka = new Shashka(sType, x, y);
         shashka.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.SECONDARY) {
-                System.out.println(PossibleJumps.canCapture(field, shashka, convert(shashka.oldX), convert(shashka.oldY)));
+                boolean canKill = PossibleJumps.canCapture(field, shashka, convert(shashka.oldX), convert(shashka.oldY));
+                boolean canMove = PossibleMoves.canMove(field, shashka, convert(shashka.oldX), convert(shashka.oldY));
+                System.out.printf("Can move -> %s, can kill -> %s%n", canMove, canKill);
             }
         });
         shashka.setOnMouseReleased(e -> {
@@ -74,6 +80,20 @@ public class Game extends Application {
                 shashka.cancel();
             } else {
                 lightsTurn = PossibleMoves.possibleMoves(field, shashka, oldX, oldY, newX, newY, xDiff, lightsTurn, shashki);
+                killers.clear();
+                walkers.clear();
+                for (Node child : shashki.getChildren()) {
+                    if (child instanceof Shashka shashka1) {
+                        if (shashka1.isLight == lightsTurn) {
+                            if (canCapture(field, shashka1, convert(shashka1.oldX), convert(shashka1.oldY))) {
+                                killers.add(shashka1);
+                            } else if (canMove(field, shashka1, convert(shashka1.oldX), convert(shashka1.oldY))) {
+                                walkers.add(shashka1);
+                            }
+                        }
+                    }
+                }
+                if (killers.isEmpty() && walkers.isEmpty()) gameOver();
             }
         });
         return shashka;

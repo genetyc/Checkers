@@ -30,16 +30,27 @@ public class PossibleJumps {
                     }
                 }
             }
-            return false;
         } else {
             for (int[] direction : directions) {
                 int xMove = x + direction[0];
                 int yMove = y + direction[1];
-
-
+                while (isValidPosition(xMove, yMove)) {
+                    Shashka eatenShashka = field[xMove][yMove].getShashka();
+                    if (eatenShashka != null) {
+                        if (eatenShashka.isLight == shashka.isLight) {
+                            break;
+                        } else {
+                            try {
+                                return !field[xMove + direction[0]][yMove + direction[1]].hasShashka();
+                            } catch (ArrayIndexOutOfBoundsException oob) {}
+                        }
+                    }
+                    xMove+=direction[0];
+                    yMove+=direction[1];
+                }
             }
-            return false;
         }
+        return false;
     }
 
     public static boolean isValidPosition(int x, int y) {
