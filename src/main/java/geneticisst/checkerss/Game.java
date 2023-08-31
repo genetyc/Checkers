@@ -5,16 +5,19 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 
 import static geneticisst.checkerss.GameSettings.*;
 import static geneticisst.checkerss.PossibleJumps.canCapture;
 import static geneticisst.checkerss.PossibleMoves.canMove;
+import static geneticisst.checkerss.GameSettings.Effects.*;
 
 public class Game extends Application {
     Group tiles = new Group();
@@ -26,9 +29,21 @@ public class Game extends Application {
     static boolean game = true;
     static LinkedList<Shashka> killers = new LinkedList<>();
     static LinkedList<Shashka> walkers = new LinkedList<>();
+    static boolean lightsWon;
 
     private Parent board() {
         Pane pane = new Pane();
+
+        String imagePath = "src/assets/bg.png";
+        Image backgroundImage = new Image(new File(imagePath).toURI().toString());
+
+        BackgroundImage backgroundImg = new BackgroundImage(backgroundImage,
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+
+        Background background = new Background(backgroundImg);
+        pane.setBackground(background);
+
         pane.setPrefSize(WIDTH * tileSize, HEIGHT * tileSize);
         pane.getChildren().addAll(tiles, shashki);
         for (int i = 0; i < HEIGHT; i++) {
@@ -39,13 +54,13 @@ public class Game extends Application {
                 if (((i + 1) % 2 != 0 && (j + 1) % 2 == 0) ||
                         (i + 1) % 2 == 0 && (j + 1) % 2 != 0) {
                     if (i < 3) {
-                        Shashka shashka = makeShashka(Shashka.SType.DARK, j, i);
+                        Shashka shashka = makeShashka(false, j, i);
                         shashka.isLight = false;
                         tile.setShashka(shashka);
                         shashki.getChildren().add(shashka);
                     }
                     if (i > 4) {
-                        Shashka shashka = makeShashka(Shashka.SType.LIGHT, j, i);
+                        Shashka shashka = makeShashka(true, j, i);
                         shashka.isLight = true;
                         tile.setShashka(shashka);
                         shashki.getChildren().add(shashka);
@@ -56,13 +71,15 @@ public class Game extends Application {
         return pane;
     }
 
-    private Shashka makeShashka(Shashka.SType sType, int x, int y) {
-        Shashka shashka = new Shashka(sType, x, y);
+    private Shashka makeShashka(boolean isLight, int x, int y) {
+        Shashka shashka = new Shashka(isLight, x, y);
         shashka.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.SECONDARY) {
-                boolean canKill = PossibleJumps.canCapture(field, shashka, convert(shashka.oldX), convert(shashka.oldY));
+                /*boolean canKill = PossibleJumps.canCapture(field, shashka, convert(shashka.oldX), convert(shashka.oldY));
                 boolean canMove = PossibleMoves.canMove(field, shashka, convert(shashka.oldX), convert(shashka.oldY));
-                System.out.printf("Can%s move, can%s kill", canMove ? "" : "'t", canKill ? "" : "'t");
+                System.out.printf("Can%s move, can%s kill%n", canMove ? "" : "'t", canKill ? "" : "'t");*/
+                playExplosionEffect(shashka, field, shashki);
+
             }
         });
         shashka.setOnMouseReleased(e -> {
@@ -93,14 +110,14 @@ public class Game extends Application {
                         }
                     }
                 }
-                if (killers.isEmpty() && walkers.isEmpty()) gameOver();
+                if (killers.isEmpty() && walkers.isEmpty()) gameOver(!lightsTurn);
             }
         });
         return shashka;
     }
 
-    static void gameOver() {
-        if (game) System.out.println("Game over");
+    static void gameOver(boolean lightsWon) {
+        if (game) System.out.printf("Game over, %s won!", lightsWon ? "lights" : "darks");
         game = false;
         //add a game-ending effect, something like evaporating all left pieces away
     }

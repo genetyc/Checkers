@@ -1,5 +1,6 @@
 package geneticisst.checkerss;
 
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -15,6 +16,15 @@ public class Tile extends Rectangle {
         setHeight(tileSize);
         relocate(x * tileSize, y * tileSize);
         setFill(isWhite ? light : dark);
+        setArcWidth(15);
+        setArcHeight(15);
+        setStrokeWidth(1);
+        setStroke(Color.BLACK);
+        InnerShadow innerShadow = new InnerShadow();
+        innerShadow.setColor(Color.BLACK);
+        innerShadow.setChoke(0.5);
+        innerShadow.setRadius(4);
+        setEffect(innerShadow);
     }
 
     public boolean hasShashka() {

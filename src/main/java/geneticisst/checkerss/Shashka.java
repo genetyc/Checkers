@@ -1,9 +1,11 @@
 package geneticisst.checkerss;
 
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Polygon;
 
 import static geneticisst.checkerss.GameSettings.convert;
 import static geneticisst.checkerss.GameSettings.tileSize;
@@ -11,23 +13,12 @@ import static geneticisst.checkerss.PossibleJumps.canCapture;
 import static geneticisst.checkerss.Game.*;
 
 public class Shashka extends StackPane {
-    public enum SType {
-        DARK(1), LIGHT(-1);
-
-        public final int way;
-
-        SType(int way) {
-            this.way = way;
-        }
-    }
-
-    public SType sType;
     public double mouseX, mouseY, oldX, oldY;
     public boolean isDamka = false;
     public boolean isLight;
 
-    public Shashka(SType sType, int x, int y) {
-        this.sType = sType;
+    public Shashka(boolean isLight, int x, int y) {
+        this.isLight = isLight;
         move(x, y);
         Ellipse bg = new Ellipse(tileSize * 0.3125, tileSize * 0.26);
         bg.setFill(Color.BLACK);
@@ -37,16 +28,21 @@ public class Shashka extends StackPane {
         bg.setTranslateY((tileSize - tileSize *  0.52) / 2 + tileSize * 0.07);
 
         Ellipse piece = new Ellipse(tileSize * 0.3125, tileSize * 0.26);
-        if (sType == SType.DARK) {
-            piece.setFill(Color.BROWN);
-        }
-        else if (sType == SType.LIGHT) piece.setFill(Color.BISQUE);
+        piece.setFill(isLight ? Color.BISQUE : Color.BROWN);
         piece.setStroke(Color.BLACK);
         piece.setStrokeWidth(tileSize * 0.03);
         piece.setTranslateX((tileSize - tileSize *  0.625) / 2);
         piece.setTranslateY((tileSize - tileSize *  0.52) / 2);
 
         getChildren().addAll(bg, piece);
+
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setColor(Color.BLACK);
+        dropShadow.setRadius(8);
+        dropShadow.setOffsetX(3);
+        dropShadow.setOffsetY(3);
+
+        setEffect(dropShadow);
 
         setOnMousePressed(e -> {
             mouseX = e.getSceneX();

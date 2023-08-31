@@ -11,7 +11,7 @@ public class PossibleMoves {
     public static boolean possibleMoves(Tile[][] field, Shashka shashka, int oldX, int oldY, int newX, int newY, int xDiff, boolean lightsTurn, Group shashki) {
         switch (xDiff) {
             case 1 -> {
-                if ((shashka.sType.way == newY - oldY || shashka.isDamka) && killers.isEmpty()) {
+                if ((newY - oldY == (shashka.isLight ? -1 : 1) || shashka.isDamka) && killers.isEmpty()) {
                     field[oldX][oldY].setShashka(null);
                     shashka.move(newX, newY);
                     if ((newY == 0 && shashka.isLight) || (newY == 7 && !shashka.isLight)) {
@@ -36,7 +36,7 @@ public class PossibleMoves {
                         shashki.getChildren().remove(eatenShashka);
                         if (eatenShashka.isLight) Game.lightShashkas--;
                         else Game.darkShashkas--;
-                        if (Game.lightShashkas == 0 || Game.darkShashkas == 0) Game.gameOver();
+                        if (Game.lightShashkas == 0 || Game.darkShashkas == 0) Game.gameOver(Game.lightShashkas != 0);
                         shashka.move(newX, newY);
                         if ((newY == 0 && shashka.isLight) || (newY == 7 && !shashka.isLight)) {
                             if (!shashka.isDamka) {
@@ -99,14 +99,14 @@ public class PossibleMoves {
                             shashki.getChildren().remove(eatenShashka);
                             if (eatenShashka.isLight) Game.lightShashkas--;
                             else Game.darkShashkas--;
-                            if (Game.lightShashkas == 0 || Game.darkShashkas == 0) Game.gameOver();
-                        }
-                        if (!canCapture(field, shashka, convert(shashka.oldX), convert(shashka.oldY))) {
-                            lightsTurn = !lightsTurn;
-                        } else {
-                            killers.clear();
-                            walkers.clear();
-                            killers.add(shashka);
+                            if (Game.lightShashkas == 0 || Game.darkShashkas == 0) Game.gameOver(Game.lightShashkas != 0);
+                            if (!canCapture(field, shashka, convert(shashka.oldX), convert(shashka.oldY))) {
+                                lightsTurn = !lightsTurn;
+                            } else {
+                                killers.clear();
+                                walkers.clear();
+                                killers.add(shashka);
+                            }
                         }
                     } else shashka.cancel();
                 }
