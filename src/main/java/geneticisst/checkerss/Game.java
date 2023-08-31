@@ -21,9 +21,9 @@ import static geneticisst.checkerss.GameSettings.Effects.*;
 
 public class Game extends Application {
     Group tiles = new Group();
-    Group shashki = new Group();
+    static Group shashki = new Group();
     static Tile[][] field = new Tile[8][8];
-    boolean lightsTurn = true;
+    static boolean lightsTurn = true;
     static int lightShashkas = 12;
     static int darkShashkas = 12;
     static boolean game = true;
@@ -55,13 +55,11 @@ public class Game extends Application {
                         (i + 1) % 2 == 0 && (j + 1) % 2 != 0) {
                     if (i < 3) {
                         Shashka shashka = makeShashka(false, j, i);
-                        shashka.isLight = false;
                         tile.setShashka(shashka);
                         shashki.getChildren().add(shashka);
                     }
                     if (i > 4) {
                         Shashka shashka = makeShashka(true, j, i);
-                        shashka.isLight = true;
                         tile.setShashka(shashka);
                         shashki.getChildren().add(shashka);
                     }
@@ -71,15 +69,13 @@ public class Game extends Application {
         return pane;
     }
 
-    private Shashka makeShashka(boolean isLight, int x, int y) {
+    public static Shashka makeShashka(boolean isLight, int x, int y) {
         Shashka shashka = new Shashka(isLight, x, y);
         shashka.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.SECONDARY) {
-                /*boolean canKill = PossibleJumps.canCapture(field, shashka, convert(shashka.oldX), convert(shashka.oldY));
+                boolean canKill = PossibleJumps.canCapture(field, shashka, convert(shashka.oldX), convert(shashka.oldY));
                 boolean canMove = PossibleMoves.canMove(field, shashka, convert(shashka.oldX), convert(shashka.oldY));
-                System.out.printf("Can%s move, can%s kill%n", canMove ? "" : "'t", canKill ? "" : "'t");*/
-                playExplosionEffect(shashka, field, shashki);
-
+                System.out.printf("Can%s move, can%s kill%n", canMove ? "" : "'t", canKill ? "" : "'t");
             }
         });
         shashka.setOnMouseReleased(e -> {
