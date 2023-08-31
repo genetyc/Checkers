@@ -5,7 +5,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Polygon;
 
 import static geneticisst.checkerss.GameSettings.convert;
 import static geneticisst.checkerss.GameSettings.tileSize;

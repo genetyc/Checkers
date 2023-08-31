@@ -30,7 +30,7 @@ public class PossibleJumps {
                             break;
                         } else {
                             try {
-                                return !field[xMove + direction[0]][yMove + direction[1]].hasShashka();
+                                if (!field[xMove + direction[0]][yMove + direction[1]].hasShashka()) return true;
                             } catch (ArrayIndexOutOfBoundsException ignored) {}
                         }
                     }
