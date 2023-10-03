@@ -1,6 +1,8 @@
 import geneticisst.checkerss.Game;
+import geneticisst.checkerss.PossibleMoves;
 import geneticisst.checkerss.Shashka;
 import geneticisst.checkerss.Tile;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.layout.*;
@@ -94,5 +96,11 @@ public class MainTest {
         assertTrue(canCapture(field, lightOne, convert(lightOne.oldX), convert(lightOne.oldY)));
         assertTrue(canCapture(field, lightTwo, convert(lightTwo.oldX), convert(lightTwo.oldY)));
         assertFalse(canCapture(field, lightThree, convert(lightThree.oldX), convert(lightThree.oldY)));
+    }
+
+    @Test
+    public void stepTest() {
+        assertTrue(PossibleMoves.possibleMoves(field, darkOpenShashka, darksX, darksY, darksX + 1, darksY + 1, 1, false, shashki));
+        assertTrue(PossibleMoves.possibleMoves(field, lightClosedShashka, lightsX, lightsY, lightsX - 5, lightsY - 5, 5, true, shashki));
     }
 }

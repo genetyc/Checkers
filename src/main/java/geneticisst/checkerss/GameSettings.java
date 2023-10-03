@@ -1,8 +1,8 @@
 package geneticisst.checkerss;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
+import javafx.animation.*;
 import javafx.scene.Group;
+import javafx.scene.effect.ColorAdjust;
 import javafx.util.Duration;
 
 public class GameSettings {
@@ -33,6 +33,14 @@ public class GameSettings {
             fadeTransition.setOnFinished(event -> {
             });
             fadeTransition.play();
+        }
+
+        public static void vibrationEffect(Shashka shashka) {
+            TranslateTransition shakeAnimation = new TranslateTransition(Duration.seconds(0.1), shashka);
+            shakeAnimation.setByX(10);
+            shakeAnimation.setCycleCount(6); // Количество вибраций
+            shakeAnimation.setAutoReverse(true);
+            shakeAnimation.playFromStart();
         }
     }
 }

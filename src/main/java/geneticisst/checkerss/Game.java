@@ -8,6 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -20,7 +23,7 @@ import static geneticisst.checkerss.PossibleMoves.canMove;
 import static geneticisst.checkerss.GameSettings.Effects.*;
 
 public class Game extends Application {
-    Group tiles = new Group();
+    static Group tiles = new Group();
     static Group shashki = new Group();
     static Tile[][] field = new Tile[8][8];
     static boolean lightsTurn = true;
@@ -31,7 +34,7 @@ public class Game extends Application {
     static LinkedList<Shashka> walkers = new LinkedList<>();
     static boolean lightsWon;
 
-    private Parent board() {
+    public static Parent board() {
         Pane pane = new Pane();
 
         String imagePath = "src/assets/bg.png";
@@ -63,6 +66,13 @@ public class Game extends Application {
                         tile.setShashka(shashka);
                         shashki.getChildren().add(shashka);
                     }
+                }
+                if (i == 0 || j == 0) {
+                    Text coordinateText = new Text((char) ('A' + j) +""+ (HEIGHT - i));
+                    coordinateText.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+                    coordinateText.setLayoutX(j * tileSize + 5);
+                    coordinateText.setLayoutY(i * tileSize + 15);
+                    pane.getChildren().add(coordinateText);
                 }
             }
         }

@@ -10,6 +10,7 @@ import static geneticisst.checkerss.GameSettings.convert;
 import static geneticisst.checkerss.GameSettings.tileSize;
 import static geneticisst.checkerss.PossibleJumps.canCapture;
 import static geneticisst.checkerss.Game.*;
+import static geneticisst.checkerss.GameSettings.Effects.*;
 
 public class Shashka extends StackPane {
     public double mouseX, mouseY, oldX, oldY;
@@ -62,6 +63,7 @@ public class Shashka extends StackPane {
 
     public void cancel() {
         relocate(oldX, oldY);
+        vibrationEffect(this);
     }
 
     public void promote() {
